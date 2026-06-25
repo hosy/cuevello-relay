@@ -1,0 +1,18 @@
+services:
+  cuevello-relay:
+    image: ghcr.io/hosy/cuevello-relay:latest
+    container_name: cuevello-relay
+    restart: unless-stopped
+    environment:
+      RELAY_SECRET_PEPPER: "replace-with-at-least-32-random-bytes"
+      TLS_CERT_FILE: "/certs/fullchain.pem"
+      TLS_KEY_FILE: "/certs/privkey.pem"
+    ports:
+      - "9443:443"
+      - "9444:8443"
+    volumes:
+      - ./certs:/certs:ro
+      - relay-data:/data
+
+volumes:
+  relay-data:
