@@ -7,6 +7,10 @@ services:
       RELAY_SECRET_PEPPER: "replace-with-at-least-32-random-bytes"
       TLS_CERT_FILE: "/certs/fullchain.pem"
       TLS_KEY_FILE: "/certs/privkey.pem"
+      MAX_STREAMS_PER_DEVICE: "32"
+      CLIENT_RATE_LIMIT_PER_MINUTE: "120"
+      CONTROL_RATE_LIMIT_PER_MINUTE: "30"
+      REQUIRE_SIGNED_REGISTRATION: "true"
     ports:
       - "9443:443"
       - "9444:8443"
