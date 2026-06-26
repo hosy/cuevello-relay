@@ -269,16 +269,16 @@ func (s *deviceStore) authorize(reg registration, requireSignedRegistration bool
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
+	_, hasExistingHash := s.Hashes[deviceID]
 	if existing, ok := s.Hashes[deviceID]; ok {
 		if !hmac.Equal([]byte(existing), []byte(nextHash)) {
 			return false
 		}
-	} else {
-		s.Hashes[deviceID] = nextHash
 	}
 
 	existingPublicKey := strings.TrimSpace(s.PublicKeys[deviceID])
 	nextPublicKey := strings.TrimSpace(reg.PublicKey)
+	var publicKeyToStore string
 	if existingPublicKey != "" {
 		if nextPublicKey == "" || nextPublicKey != existingPublicKey {
 			return false
@@ -290,9 +290,16 @@ func (s *deviceStore) authorize(reg registration, requireSignedRegistration bool
 		if !verifyRegistrationSignature(reg, nextPublicKey) {
 			return false
 		}
-		s.PublicKeys[deviceID] = nextPublicKey
+		publicKeyToStore = nextPublicKey
 	} else if requireSignedRegistration {
 		return false
+	}
+
+	if !hasExistingHash {
+		s.Hashes[deviceID] = nextHash
+	}
+	if publicKeyToStore != "" {
+		s.PublicKeys[deviceID] = publicKeyToStore
 	}
 
 	if err := s.saveLocked(); err != nil {
