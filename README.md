@@ -2,6 +2,8 @@
 
 Docker service for Cuevello relay connections. The Mac server connects to the control port, clients connect to per-device subdomains, and the relay forwards encrypted Cuevello traffic to the registered Mac.
 
+Cuevello is a remote control app for securely running Mac menu actions, workflows, file access, and screen streaming from a paired client. Learn more at [cuevello.app](https://cuevello.app).
+
 ## Container Image
 
 ```text
